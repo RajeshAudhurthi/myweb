@@ -23,7 +23,7 @@ pipeline {
         stage('docker image build') {
             steps {
                 sh "docker image build -t myweb:1.0 ."
-                sh "cd && pwd"
+                sh "cd /home/ec2-user && pwd"
             }
         }
         stage('ecr login') {
