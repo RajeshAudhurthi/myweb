@@ -5,7 +5,7 @@ pipeline {
         AWS_DEFAULT_REGION="us-east-1"
         IMAGE_REPO_NAME="webapp-pri"
         DOCKER_HUB_ID="raajesh404"
-        IMAGE_TAG="3.0"
+        IMAGE_TAG="4.0"
         REPOSITORY_URI= "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         PUBLIC_IP_KUBEADM="35.172.228.37"
     }
