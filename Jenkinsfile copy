@@ -2,11 +2,7 @@ pipeline {
     agent any
     
     stages {
-        stage('Logging into AWS ECR') {
-            steps {
-                sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c4w3s5l6"
-            }
-        }
+        
         stage('clone the repo from github') {
             steps {
                 git 'https://github.com/RajeshAudhurthi/webapp.git'
