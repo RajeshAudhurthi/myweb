@@ -60,7 +60,7 @@ pipeline {
                 sshagent(['kubeadm']) {
                                       
                     sh "scp -o StrictHostKeyChecking=no deployment-webapp.yml service-webapp-np.yml ubuntu@${PUBLIC_IP_KUBEADM}:/home/ubuntu/"
-                    
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     script{
                         try{
                             sh "ssh ubuntu@${PUBLIC_IP_KUBEADM} sudo kubectl apply -f ."
