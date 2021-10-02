@@ -59,6 +59,7 @@ pipeline {
                 sshagent(['kubeadm']) {
                                       
                     sh "scp -o StrictHostKeyChecking=no deployment-webapp.yml service-webapp-np.yml ubuntu@54.173.219.87:/home/ubuntu/"
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     sh "docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                     script{
                         try{
