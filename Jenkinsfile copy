@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Logging into AWS ECR') {
+            steps {
+                sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c4w3s5l6"
+            }
+        }
+        stage('clone the repo from github') {
+            steps {
+                git 'https://github.com/RajeshAudhurthi/webapp.git'
+            }
+        }
+        stage('maven build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage('archive the artifacts:war') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.war', followSymlinks: false
+                sh "mv target/*war ."
+            }
+        }
+        // install docker and docker pipeline plugins in jenkins
+        stage('docker image build') {
+            steps {
+                sh "docker image build -t myweb:1.0 ."
+            }
+        }
+        //create a repo in ecr
+        stage('Pushing to ECR') {
+            steps {  
+                sh "docker tag myweb:1.0 public.ecr.aws/c4w3s5l6/myweb:1.0"
+                sh "docker push public.ecr.aws/c4w3s5l6/myweb:1.0"
+            }
+        }
+        //install sshagent plugin and generate syntax in syntax generator: add user name and private key (.pem) of kubeadm master
+        stage('k8s deploy') {
+            steps {
+                sshagent(['kubeadm']) {
+                                      
+                    sh "scp -o StrictHostKeyChecking=no deployment-webapp.yml service-webapp-np.yml ubuntu@35.172.228.37:/home/ubuntu/"
+                    script{
+                        try{
+                            sh "ssh ubuntu@35.172.228.37 kubectl apply -f ."
+                        }
+                        catch(error){
+                            sh "ssh ubuntu@35.172.228.37 kubectl create -f ."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

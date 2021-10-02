@@ -3,9 +3,9 @@ pipeline {
     environment {
         AWS_ACCOUNT_ID="869250677914"
         AWS_DEFAULT_REGION="us-east-1"
-        IMAGE_REPO_NAME="webapp"
+        IMAGE_REPO_NAME="myweb"
         DOCKER_HUB_ID="raajesh404"
-        IMAGE_TAG="4.0"
+        IMAGE_TAG="1.0"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
     }
     stages {
@@ -53,7 +53,7 @@ pipeline {
                 sh "docker push ${DOCKER_HUB_ID}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
             }
         }
-        //install sshagent plugin and generate syntax in syntax generator: add user name and private ip of kubeadm master
+        //install sshagent plugin and generate syntax in syntax generator: add user name and private key (.pem) of kubeadm master
         stage('k8s deploy') {
             steps {
                 sshagent(['kubeadm']) {
