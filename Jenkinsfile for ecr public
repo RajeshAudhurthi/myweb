@@ -28,7 +28,7 @@ pipeline {
         }
         stage('ecr login') {
             steps {
-                sh "sudo aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c4w3s5l6"
+                sh "sudo -S aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c4w3s5l6"
             }
         }
         //create a repo in ecr
