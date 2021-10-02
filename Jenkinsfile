@@ -5,8 +5,9 @@ pipeline {
         AWS_DEFAULT_REGION="us-east-1"
         IMAGE_REPO_NAME="webapp-pri"
         DOCKER_HUB_ID="raajesh404"
-        IMAGE_TAG="1.0"
-        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+        IMAGE_TAG="2.0"
+        REPOSITORY_URI= "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+        PUBLIC_IP_KUBEADM="35.172.228.37"
     }
     stages {
         stage('Logging into AWS ECR') {
@@ -58,15 +59,14 @@ pipeline {
             steps {
                 sshagent(['kubeadm']) {
                                       
-                    sh "scp -o StrictHostKeyChecking=no deployment-webapp.yml service-webapp-np.yml ubuntu@54.173.219.87:/home/ubuntu/"
-                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                    sh "docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+                    sh "scp -o StrictHostKeyChecking=no deployment-webapp.yml service-webapp-np.yml ubuntu@${PUBLIC_IP_KUBEADM}:/home/ubuntu/"
+                    
                     script{
                         try{
-                            sh "ssh ubuntu@54.173.219.87 sudo kubectl apply -f ."
+                            sh "ssh ubuntu@${PUBLIC_IP_KUBEADM} sudo kubectl apply -f ."
                         }
                         catch(error){
-                            sh "ssh ubuntu@54.173.219.87 sudo kubectl create -f ."
+                            sh "ssh ubuntu@${PUBLIC_IP_KUBEADM} sudo kubectl create -f ."
                         }
                     }
                 }
