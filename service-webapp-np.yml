@@ -7,6 +7,6 @@ spec:
      app: webapp  
   type: NodePort
   ports: 
-  - nodePort: 30008
+  - nodePort: 30088
     port: 80
     targetPort: 8080
