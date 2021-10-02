@@ -3,7 +3,7 @@ pipeline {
     environment {
         AWS_ACCOUNT_ID="869250677914"
         AWS_DEFAULT_REGION="us-east-1"
-        IMAGE_REPO_NAME="myweb"
+        IMAGE_REPO_NAME="webapp-pri"
         DOCKER_HUB_ID="raajesh404"
         IMAGE_TAG="1.0"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
@@ -59,6 +59,7 @@ pipeline {
                 sshagent(['kubeadm']) {
                                       
                     sh "scp -o StrictHostKeyChecking=no deployment-webapp.yml service-webapp-np.yml ubuntu@54.173.219.87:/home/ubuntu/"
+                    sh "docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                     script{
                         try{
                             sh "ssh ubuntu@54.173.219.87 sudo kubectl apply -f ."
