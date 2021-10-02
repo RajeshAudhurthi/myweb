@@ -25,6 +25,11 @@ pipeline {
                 sh "docker image build -t myweb:1.0 ."
             }
         }
+        stage('ecr login') {
+            steps {
+                sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c4w3s5l6"
+            }
+        }
         //create a repo in ecr
         stage('Pushing to ECR') {
             steps {  
