@@ -14,10 +14,12 @@ spec:
       labels:
         app: webapp
     spec:
+      imagePullSecrets:
+      - name: secret-registry
 ##     nodeName: ip-172.31.87.255  ## node name
       containers:
       - name: webapp
-        image: 869250677914.dkr.ecr.us-east-1.amazonaws.com/webapp-pri:5.0
+        image: 869250677914.dkr.ecr.us-east-1.amazonaws.com/webapp-pri:7.0
         ports:
         - containerPort: 8080
 ## labels - kubectl get nodes --show-labels - kubectl label nodes <your-node-name> disktype=ssd
